@@ -370,7 +370,6 @@ weatherAutocomplete =  {
 		 * Iterate through the list of results
 		 */
 		for(i=0; i < r.length; i++) {
-
 			/**
 			 * Set local variables for all the properties
 			 */
@@ -390,6 +389,25 @@ weatherAutocomplete =  {
 			var coordsLon =        r[i].coord.lon;
 			var description =      r[i].weather[0].description;
 			var shortDescription = r[i].weather[0].main;
+
+			weatherAutocomplete.displayFormat({
+				city: city,
+				city_id: cityId,
+				temp: temp,
+				icon: icon,
+				windSpeed: windSpeed,
+				windDirection: windDirection,
+				clouds: clouds,
+				countryCode: countryCode,
+				humidity: humidity,
+				pressure: pressure,
+				minTemp: minTemp,
+				maxTemp: maxTemp,
+				latitude: coordsLat,
+				longitude: coordsLon,
+				description: description,
+				sortDescription: shortDescription
+			})
 
 			/**
 			 * Set the rain seperately as it comes in a variety of different measurements depending in the rain level
@@ -724,6 +742,16 @@ weatherAutocomplete =  {
 		 * @todo stringify the rain
 		 */
 		return 'rain';
+	},
+
+	displayFormat: function(data) {
+
+		var formatRequired = this.defaults.displayFormat;
+
+		while (formatRequired.indexOf('{{')) {
+			var data = formatRequired.substring(formatRequired.indexOf('{{'), formatRequired.indexOf('}}'))
+			console.log(data);
+		}
 	}
 };
 
