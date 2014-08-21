@@ -3,7 +3,6 @@ weatherAutocomplete =  {
 	/**
 	 * @todo
 	 * Implement the:
-	 *     display format
 	 *     fields that need data attributes
 	 * Check on the API key usage
 	 * Create feedback for errors
@@ -12,14 +11,87 @@ weatherAutocomplete =  {
 	 * stringify the rain
 	 * return an object at the end???
 	 */
+
+	/**
+	 * Var that will hold the search term
+	 */
 	term: '',
+
+	/**
+	 * object that will hold all the results returned for the search term
+	 */
 	existingResults: '',
+
+	/**
+	 * Object holding the default options. Each can be overridden by passing the same key through to the init method
+	 */
 	defaults: {
+
+		/**
+		 * The selector for the search input field. This will be used to grab the search term for and to bind the
+		 * resulting results box to
+		 */
 		searchElement: '#weatherSearchInput',
+
+		/**
+		 * How many characters should the user have to enter before the initial query is made to the OpenWeatherMap API?
+		 */
 		minSearchCharacters: 3,
+
+		/**
+		 * The API key for the openweathermap aip. This may change or be deleted depending on how it needs to be used
+		 */
 		apiKey: 'e12d6c5a83c260d4fa6a27de5f923145',
+
+		/**
+		 * Does the user want their results in "metric" or "imperial"
+		 *
+		 * Metric:
+		 *      Temperature:    degrees Celcius
+		 *      Wind Speed:     meters/seconds
+		 *      Pressure:       millibars
+		 *      Rain:           millimeters
+		 *
+		 * Imperial:
+		 *      Temperature:    degrees Fahrenheit
+		 *      Wind Speed:     ???
+		 *      Pressure:       ???
+		 *      Rain:           ???
+		 */
 		measurementType: 'metric',
-		displayFormat: '<city>, <countryCode> <icon> (<temp>)'
+
+		/**
+		 * What format does the user want the information to be presented in within the autocomplete results?
+		 *
+		 * Options:
+		 *      cityName
+		 *      city_id
+		 *      temp
+		 *      icon
+		 *      windSpeed
+		 *      windDirection
+		 *      clouds
+		 *      countryCode
+		 *      humidity
+		 *      pressure
+		 *      minTemp
+		 *      maxTemp
+		 *      longitude
+		 *      latitude
+		 *      shortDescription
+		 *      longDescription
+		 *
+		 * All the user has to do is create a string and wrap data they want in curly braces.
+		 * Example: If I wanted the information to be presented as:
+		 * Barnsley, GB {weather icon} (15 deg C)
+		 * Notes: In the example above the icon would be shown and the temperature would include the degree symbol
+		 * followed by correct measurement (C or F)
+		 * The above example would be coded as:
+		 *
+		 *      '{cityName}, {countryCode} {icon} ({temp})'
+		 * The above is also the default format.
+		 */
+		displayFormat: '{city}, {countryCode} {icon} ({temp})'
 	},
 
 	/**
@@ -136,6 +208,7 @@ weatherAutocomplete =  {
 				 * Action the city selected
 				 */
 				weatherAutocomplete.setCity($(this).attr('data-city'));
+
 			});
 		})
 	},
@@ -419,8 +492,6 @@ weatherAutocomplete =  {
 
 			/**
 			 * Attach a data attribute for each piece of information
-			 *
-			 * @todo Add a default that will allow the user to select which pieces of information they want
 			 */
 			var li = $('#weatherSearchResults li:last-child')
 				.addClass('weatherSearchResultItem')
@@ -444,8 +515,6 @@ weatherAutocomplete =  {
 
 			/**
 			 * And set the text of the result item
-			 *
-			 * @todo Make this the format the is provided in the defaults/options
 			 */
 				.text(weatherAutocomplete.displayFormat);
 		}
@@ -531,7 +600,7 @@ weatherAutocomplete =  {
 	formatSearchURL: function() {
 		var baseURL  = 'http://api.openweathermap.org/data/2.5/find?',
 			format   = 'json', // json or xml
-			metric   = 'internal',// internal, metric or imperial
+			metric   = 'metric',// internal, metric or imperial
 			accuracy = 'like'; // like or accurate
 
 
@@ -570,8 +639,20 @@ weatherAutocomplete =  {
 	 * @returns {boolean}
 	 */
 	setCity: function(city) {
+
+		/**
+		 * Set the value of the search input to be the chosen city
+		 */
 		$(this.defaults.searchElement).val(city);
+
+		/**
+		 * Now that a choice has been made we can hide the results box
+		 */
 		this.hideAutocomplete();
+
+		/**
+		 * Now go away
+		 */
 		return false;
 	},
 
@@ -587,25 +668,9 @@ weatherAutocomplete =  {
 	},
 
 	/**
-	 * Set the background icon for the search result item
-	 *
-	 * @param id
-	 * @param iconId
-	 */
-	setBackgroundIcon: function(id, iconId) {
-
-		/**
-		 * Add the icon class to the element in question
-		 *
-		 * @todo Make sure this only happens to one child
-		 */
-		$('.weatherSearchResultItem_' + id)
-			.children()
-			.addClass('icon' + iconId);
-	},
-
-	/**
 	 * Convert the temperature from Kelvin to the required scale
+	 *
+	 * @todo Create a policy for the weather. Do I want it in kelvin or what???
 	 *
 	 * @param kelvin
 	 *
@@ -632,37 +697,9 @@ weatherAutocomplete =  {
 	},
 
 	/**
-	 * Convert the correct temperature to the correct display formt dependant on the measurement
-	 *
-	 * @param temp
-	 * @param measurement
-	 *
-	 * @returns {string}
-	 */
-	convertTemperatureToDisplayFormat: function(temp) {
-
-		/**
-		 * Set a blank string
-		 */
-		var entity = '';
-
-		/**
-		 * Apply the correct HTML entity for the measurement type
-		 */
-		if (weatherAutocomplete.defaults.measurementType == 'metric') {
-			entity = '&#8451';
-		} else {
-			entity = '&#8457';
-		}
-
-		/**
-		 * return the correct temperature formatted with the correct HTML entity and rounded to one decimal place
-		 */
-		return temp.toFixed(1) + ' ' + entity;
-	},
-
-	/**
 	 * Convert the rain level to a uniform format as it comes in various formats depending on the rain level
+	 *
+	 * @todo Create a method for the rain
 	 *
 	 * @param rainObj
 	 *
@@ -687,51 +724,107 @@ weatherAutocomplete =  {
 		return 'rain';
 	},
 
+	/**
+	 * Iterate through the code provided for the weather information display and replace the codes with the actual data
+	 *
+	 * @param data
+	 */
 	displayFormat: function(data) {
+
+		/**
+		 * Cache the required format
+		 */
 		var formatRequired = this.defaults.displayFormat;
+
+		/**
+		 * As long as there is an opening curly brace in the required format keep replacing them
+ 		 */
 		while (formatRequired.indexOf('{') >= 0) {
+
+			/**
+			 * Use substring to get the name of the piece of information we want to replace
+			 */
 			var dataToReplace = formatRequired.substring(formatRequired.indexOf('{')+1, (formatRequired.indexOf('}')))
 
+			/**
+			 * Now perform a switch/case on the name of the piece of data
+			 */
 			switch(dataToReplace) {
-				case temp:
+
+				case 'temp':
+
+					/**
+					 * Convert the provided temp to the required measurement then it's ready to be swapped out
+					 */
 					replacement = weatherAutocomplete.convertTemperature(data.temp);
 					break;
 
 				case 'windSpeed':
+
+					/**
+					 * Format the wind speed to the correct measurement type then it's ready to be swapped out
+ 					 */
 					replacement = weatherAutocomplete.formatWindSpeed(data.windSpeed);
 					break;
 
 				case 'windDirection':
+
+					/**
+					 * Simply replace the keyword with the wind direction followed by the degrees symbol
+					 *
+					 * @todo Maybe offer an option to have it returned in mills
+					 *
+					 * @type {string}
+					 */
 					replacement = data.windDirection + '&deg;';
 					break
 
 				case 'clouds':
+
+					/**
+					 * Simply return the cloud coverage followed by the percent symbol
+					 */
 					replacement = data.clouds + '&#37;';
 					break
 
 				case 'humidity':
+
+					/**
+					 * Simply return the humidty level followed by the percent symbol
+					 */
 					replacement = data.humidity + '&#37;';
 					break;
 
 				case 'pressure':
+
+					/**
+					 * return the borometric pressure
+					 *
+					 * @todo Look at imperial and metric measurements and format them correctly
+					 */
 					replacement = data.pressure + 'mbar';
 					break;
 
 				case 'minTemp':
+
+					/**
+					 * Return the minimum temperature for the city once it's been correctly formatted
+					 */
 					replacement = weatherAutocomplete.convertTemperature(data.minTemp);
 
 				case 'maxTemp':
+
+					/**
+					 * Return the maximum temperature for the city once it's been correctly formatted
+					 */
 					replacement = weatherAutocomplete.convertTemperature(data.maxTemp);
 
-			/**
-			 * If the icon is in the information to DISPLAY then display it
-			 *
-			 * @todo Try and fit this in with the above todo
-			 */
 				case 'icon':
 
 					/**
-					 * Add a weather icon span to fit the icon into
+					 * Add a weather icon span to fit the icon into as the span will have it's background image set
+					 *
+					 * @todo Provide the icon id so that the background-image is already set
 					 */
 					var replacement = '<span class="weatherIcon_' + data.id + ' weatherIcon">&nbsp;</span>';
 
@@ -747,12 +840,47 @@ weatherAutocomplete =  {
 				case 'description':
 				case 'shortDescription':
 				default:
+
+					/**
+					 * For the:
+					 *      Latitude
+					 *      Longitude
+					 *      Country Code
+					 *      City Name
+					 *      Short Description
+					 *      Long Description
+					 * The information can just be returned as it does not need modifying
+					 */
 					replacement = data[dataToReplace];
 			}
+
+			/**
+			 * Create a new regular expression object with the code for the item eg {cityName}
+			 */
+			var re = new RegExp("{" + dataToReplace + "}");
+
+			/**
+			 * Perform the replacement.ie replace {cityName} with Barnsley (from the example near the top of the script)
+			 * @type {string}
+			 */
+			formatRequired = formatRequired.replace(re, data[dataToReplace]);
 		}
+
+		/**
+		 * Now that all the codes have been replaced we need to set the correctly formatted string back in the main
+		 * object's scope
+		 */
+		weatherAutocomplete.defaults.displayFormat = formatRequired;
 	},
 
+	/**
+	 * Format the wind speed depending on what measurement type has been chosen
+	 */
 	formatWindSpeed: function() {
+
+		/**
+		 * Return a correctly formatted string
+		 */
 		return windSpeed + weatherAutocomplete[weatherAutocomplete.defaults.measurementType].windSpeed;
 	}
 };
