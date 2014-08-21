@@ -18,14 +18,8 @@ weatherAutocomplete =  {
 		searchElement: '#weatherSearchInput',
 		minSearchCharacters: 3,
 		apiKey: 'e12d6c5a83c260d4fa6a27de5f923145',
-		temperatureMeasurement: 'c',
-		displayFormat: '{city}, {countryCode} {icon} ({tempC})',
-		informationToDisplay: [
-			'city',
-			'countryCode',
-			'temperature',
-			'icon'
-		]
+		measurementType: 'metric',
+		displayFormat: '<city>, <countryCode> <icon> (<temp>)'
 	},
 
 	/**
@@ -126,7 +120,7 @@ weatherAutocomplete =  {
 			/**
 			 * Set the value in the main scope
 			 */
-			weatherAutocomplete.setTerm(term);
+			weatherAutocomplete.setSearchTerm(term);
 
 			/**
 			 * Now that we have a new input value we need to filter through the results
@@ -228,6 +222,8 @@ weatherAutocomplete =  {
 		/**
 		 * Set the search input elements data-tags with all the available information for the user to do with as
 		 * they will
+		 *
+		 * @todo convert all underscores to camelCase
 		 */
 		$(weatherAutocomplete.defaults.searchElement)
 			.attr('data-city_id',          selected.attr('data-city_id'))
@@ -297,7 +293,7 @@ weatherAutocomplete =  {
 		 * Send an AJAX request off
 		 */
 		$.ajax({
-			// Format the URL seperately
+			// Format the URL separately
 			url: weatherAutocomplete.formatSearchURL(),
 			type: 'POST',
 			success: function(reply) {
@@ -369,12 +365,12 @@ weatherAutocomplete =  {
 		/**
 		 * Iterate through the list of results
 		 */
-		for(i=0; i < r.length; i++) {
+		for(var i=0; i < r.length; i++) {
 			/**
 			 * Set local variables for all the properties
 			 */
 			var city =             r[i].name;
-			var cityId =           r[i].id;
+			var city_id =          r[i].id;
 			var temp =             r[i].main.temp;
 			var icon =             r[i].weather[0].icon;
 			var windSpeed =        r[i].wind.speed;
@@ -390,22 +386,23 @@ weatherAutocomplete =  {
 			var description =      r[i].weather[0].description;
 			var shortDescription = r[i].weather[0].main;
 
+
 			weatherAutocomplete.displayFormat({
-				city: city,
-				city_id: cityId,
-				temp: temp,
-				icon: icon,
-				windSpeed: windSpeed,
-				windDirection: windDirection,
-				clouds: clouds,
-				countryCode: countryCode,
-				humidity: humidity,
-				pressure: pressure,
-				minTemp: minTemp,
-				maxTemp: maxTemp,
-				latitude: coordsLat,
-				longitude: coordsLon,
-				description: description,
+				cityName:        city,
+				city_id:         city_id,
+				temp:            temp,
+				icon:            icon,
+				windSpeed:       windSpeed,
+				windDirection:   windDirection,
+				clouds:          clouds,
+				countryCode:     countryCode,
+				humidity:        humidity,
+				pressure:        pressure,
+				minTemp:         minTemp,
+				maxTemp:         maxTemp,
+				latitude:        coordsLat,
+				longitude:       coordsLon,
+				description:     description,
 				sortDescription: shortDescription
 			})
 
@@ -428,21 +425,21 @@ weatherAutocomplete =  {
 			var li = $('#weatherSearchResults li:last-child')
 				.addClass('weatherSearchResultItem')
 				.attr('id', 'weatherSearchResultItem_' + r[i].id)
-				.attr('data-cityName', city)
-				.attr('data-city_id', cityId)
-				.attr('data-temp', temp)
-				.attr('data-icon', icon)
-				.attr('data-windSpeed', windSpeed)
-				.attr('data-windDirection', windDirection)
-				.attr('data-cloudCoverage', clouds)
-				.attr('data-countryCode', countryCode)
-				.attr('data-humidity', humidity)
-				.attr('data-pressure', pressure)
-				.attr('data-minTemp', minTemp)
-				.attr('data-maxTemp', maxTemp)
-				.attr('data-latitude', coordsLat)
-				.attr('data-longitude', coordsLon)
-				.attr('data-description', description)
+				.attr('data-cityName',         city)
+				.attr('data-city_id',          city_id)
+				.attr('data-temp',             temp)
+				.attr('data-icon',             icon)
+				.attr('data-windSpeed',        windSpeed)
+				.attr('data-windDirection',    windDirection)
+				.attr('data-cloudCoverage',    clouds)
+				.attr('data-countryCode',      countryCode)
+				.attr('data-humidity',         humidity)
+				.attr('data-pressure',         pressure)
+				.attr('data-minTemp',          minTemp)
+				.attr('data-maxTemp',          maxTemp)
+				.attr('data-latitude',         coordsLat)
+				.attr('data-longitude',        coordsLon)
+				.attr('data-description',      description)
 				.attr('data-shortDescription', shortDescription)
 
 			/**
@@ -450,64 +447,7 @@ weatherAutocomplete =  {
 			 *
 			 * @todo Make this the format the is provided in the defaults/options
 			 */
-				.text(city + ', ' + countryCode);
-
-
-			/**
-			 * If the icon is in the information to DISPLAY then display it
-			 *
-			 * @todo Try and fit this in with the above todo
-			 */
-			if (weatherAutocomplete.defaults.informationToDisplay.indexOf('icon')) {
-
-				/**
-				 * Add a weather icon span to fit the icon into
-				 */
-				var icon = '<span id="weatherIcon_' + r[i].id + '" class="weatherIcon">&nbsp;</span>';
-
-				/**
-				 * Append the icon to the li
-				 */
-				$('#weatherSearchResultItem_' + r[i].id).append(icon);
-
-				/**
-				 * Set the background image to be the icon
-				 */
-				weatherAutocomplete.setBackgroundIcon(r[i].id, r[i].weather[0].icon);
-			}
-
-			/**
-			 * If the user wants the temperature displaying then display it
-			 *
-			 * @todo try and fit this in with the previous todo
-			 */
-			if (weatherAutocomplete.defaults.informationToDisplay.indexOf('temp')) {
-
-				/**
-				 * Get the temperature measurement type from the settings
-				 */
-				var measurement = weatherAutocomplete.defaults.temperatureMeasurement;
-
-				/**
-				 * Get the correct temperature for the measurement
-				 */
-				var correctTemperature = weatherAutocomplete.convertTemperature(r[i].main.temp, measurement);
-
-				/**
-				 * Format the correct temperature (add the correct HTML entity and round down the decimal places)
-				 */
-
-				var temperatureFormatted = weatherAutocomplete.convertTemperatureToDisplayFormat(correctTemperature, measurement)
-				/**
-				 * Add a temperature span to fit the temperature into
-				 */
-				var temp = '<span id="weatherTemp_' + r[i].id + '" class="weatherTemp">(' + weatherAutocomplete.convertTemperature(r[i].main.temp, weatherAutocomplete.defaults.temperatureMeasurement) + ' &#8451;)</span>';
-
-				/**
-				 * Append it to the li
-				 */
-				$('#weatherSearchResultItem_' + r[i].id).append(temp);
-			}
+				.text(weatherAutocomplete.displayFormat);
 		}
 	},
 
@@ -541,7 +481,10 @@ weatherAutocomplete =  {
 		/**
 		 * Append the container to the parent of the search input field
 		 */
-		var ul = parent.append('<ul></ul>');
+		var parent = $(weatherAutocomplete.defaults.searchElement).parent();
+		parent.append('<ul></ul>');
+
+		var ul = parent.find('ul');
 
 		/**
 		 * Add the class; id; width and top attributes to the container
@@ -602,7 +545,7 @@ weatherAutocomplete =  {
 		/**
 		 * We can now build the URL
 		 */
-		var url      = baseURL + 'q=' + this.term + '&mode=' + format + '&units=' + metric + '&type=' + accuracy + '&APPID=' + apiKey;
+		var url = baseURL + 'q=' + this.term + '&mode=' + format + '&units=' + metric + '&type=' + accuracy + '&APPID=' + apiKey;
 
 		/**
 		 * And send it back
@@ -611,11 +554,11 @@ weatherAutocomplete =  {
 	},
 
 	/**
-	 * Set the seach term in the script's scope
+	 * Set the search term in the script's scope
 	 *
 	 * @param term
 	 */
-	setTerm: function(term) {
+	setSearchTerm: function(term) {
 		this.term = term;
 	},
 
@@ -656,7 +599,7 @@ weatherAutocomplete =  {
 		 *
 		 * @todo Make sure this only happens to one child
 		 */
-		$('#weatherSearchResultItem_' + id)
+		$('.weatherSearchResultItem_' + id)
 			.children()
 			.addClass('icon' + iconId);
 	},
@@ -668,12 +611,12 @@ weatherAutocomplete =  {
 	 *
 	 * @returns {number}
 	 */
-	convertTemperature: function(kelvin, measurement) {
+	convertTemperature: function(kelvin) {
 
 		/**
 		 * If the measurement is 'c' then the conversion is simple...
 		 */
-		if (measurement == 'c') {
+		if (weatherAutocomplete.defaults.measurementType == 'metric') {
 
 			/**
 			 * ...we just take 272.15 away...
@@ -696,7 +639,7 @@ weatherAutocomplete =  {
 	 *
 	 * @returns {string}
 	 */
-	convertTemperatureToDisplayFormat: function(temp, measurement) {
+	convertTemperatureToDisplayFormat: function(temp) {
 
 		/**
 		 * Set a blank string
@@ -706,7 +649,7 @@ weatherAutocomplete =  {
 		/**
 		 * Apply the correct HTML entity for the measurement type
 		 */
-		if (measurement == 'c') {
+		if (weatherAutocomplete.defaults.measurementType == 'metric') {
 			entity = '&#8451';
 		} else {
 			entity = '&#8457';
@@ -745,13 +688,72 @@ weatherAutocomplete =  {
 	},
 
 	displayFormat: function(data) {
-
 		var formatRequired = this.defaults.displayFormat;
+		while (formatRequired.indexOf('{') >= 0) {
+			var dataToReplace = formatRequired.substring(formatRequired.indexOf('{')+1, (formatRequired.indexOf('}')))
 
-		while (formatRequired.indexOf('{{')) {
-			var data = formatRequired.substring(formatRequired.indexOf('{{'), formatRequired.indexOf('}}'))
-			console.log(data);
+			switch(dataToReplace) {
+				case temp:
+					replacement = weatherAutocomplete.convertTemperature(data.temp);
+					break;
+
+				case 'windSpeed':
+					replacement = weatherAutocomplete.formatWindSpeed(data.windSpeed);
+					break;
+
+				case 'windDirection':
+					replacement = data.windDirection + '&deg;';
+					break
+
+				case 'clouds':
+					replacement = data.clouds + '&#37;';
+					break
+
+				case 'humidity':
+					replacement = data.humidity + '&#37;';
+					break;
+
+				case 'pressure':
+					replacement = data.pressure + 'mbar';
+					break;
+
+				case 'minTemp':
+					replacement = weatherAutocomplete.convertTemperature(data.minTemp);
+
+				case 'maxTemp':
+					replacement = weatherAutocomplete.convertTemperature(data.maxTemp);
+
+			/**
+			 * If the icon is in the information to DISPLAY then display it
+			 *
+			 * @todo Try and fit this in with the above todo
+			 */
+				case 'icon':
+
+					/**
+					 * Add a weather icon span to fit the icon into
+					 */
+					var replacement = '<span class="weatherIcon_' + data.id + ' weatherIcon">&nbsp;</span>';
+
+					/**
+					 * Set the background image to be the icon
+					 */
+					weatherAutocomplete.setBackgroundIcon(data.id, data.icon);
+
+				case 'latitude':
+				case 'longitude':
+				case 'countryCode':
+				case 'cityName':
+				case 'description':
+				case 'shortDescription':
+				default:
+					replacement = data[dataToReplace];
+			}
 		}
+	},
+
+	formatWindSpeed: function() {
+		return windSpeed + weatherAutocomplete[weatherAutocomplete.defaults.measurementType].windSpeed;
 	}
 };
 
