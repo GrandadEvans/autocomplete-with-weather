@@ -17,15 +17,16 @@ You can clone the repository locally with `git clone git@github.com:GrandadEvans
 
 ### How to use it
     weatherAutocomplete({
-        searchElement: '#weatherAutocompleteSearchInput',
-        minSearchCharacters: 3,
-        informationToDisplay: [
-            'city',
-            'countryCode',
-            'temperature',
-            'icon'
-        ],
-        measurements: 'metric'
+		searchElement: '#weatherSearchInput',
+		minSearchCharacters: 3,
+		temperatureMeasurement: 'c',
+		displayFormat: '{city}, {countryCode} {icon} ({tempC})',
+		informationToDisplay: [
+			'city',
+			'countryCode',
+			'temperature',
+			'icon'
+		]
     });
 
 ## Configuration
