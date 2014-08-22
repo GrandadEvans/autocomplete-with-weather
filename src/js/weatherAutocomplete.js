@@ -756,11 +756,15 @@ weatherAutocomplete =  {
 			 */
 			switch(dataToReplace) {
 
+			/**
+			 * These entries come in the form of an abbreviation and as such need to be wrapped in the appropriate tag
+			 */
 				case 'temperature':
 				case 'windSpeed':
 				case 'windDirection':
 				case 'minTemp':
 				case 'maxTemp':
+				case 'pressure':
 
 					/**
 					 * Convert the provided temperature to the required measurement then it's ready to be swapped out
@@ -772,23 +776,16 @@ weatherAutocomplete =  {
 					);
 					break;
 
+			/**
+			 * These entries just need a percent sign appending
+			 */
 				case 'humidity':
-				case'clouds':
+				case 'clouds':
 
 					/**
-					 * Simply return the humidty level followed by the percent symbol
+					 * Simply return the humidity level followed by the percent symbol
 					 */
 					replacement = data[dataToReplace] + '&#37;';
-					break;
-
-				case 'pressure':
-
-					/**
-					 * return the borometric pressure
-					 *
-					 * @todo Look at imperial and metric measurements and format them correctly
-					 */
-					replacement = data.pressure + 'mbar';
 					break;
 
 				case 'icon':
@@ -801,6 +798,16 @@ weatherAutocomplete =  {
 					var replacement = '<span class="weatherIcon_' + data.icon + ' weatherIcon">&nbsp;</span>';
 					break;
 
+			/**
+			 * For the:
+			 *      Latitude
+			 *      Longitude
+			 *      Country Code
+			 *      City Name
+			 *      Short Description
+			 *      Long Description
+			 * The information can just be returned as it does not need modifying
+			 */
 				case 'latitude':
 				case 'longitude':
 				case 'countryCode':
@@ -809,19 +816,8 @@ weatherAutocomplete =  {
 				case 'shortDescription':
 				default:
 
-					/**
-					 * For the:
-					 *      Latitude
-					 *      Longitude
-					 *      Country Code
-					 *      City Name
-					 *      Short Description
-					 *      Long Description
-					 * The information can just be returned as it does not need modifying
-					 */
 					replacement = data[dataToReplace];
 			}
-			console.log('replacement has returned: ' + replacement);
 
 			/**
 			 * Create a new regular expression object with the code for the item eg {cityName}
