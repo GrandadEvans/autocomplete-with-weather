@@ -70,3 +70,12 @@ The above is also the default format.
 
 ## Support
 If you require any help then please don't be afraid to ask :-) and thanks for looking.
+
+## Todo
+I have a few plans for this library as i use it myself:
+
+  *  Create tests
+  *  Create an auto notification if an error exists
+  *  Make sure the autocomplete box aligns with the search input box
+  *  Monitor the rain input to see what levels the rainfall are over
+  
