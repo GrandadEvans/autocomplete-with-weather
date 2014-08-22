@@ -1,4 +1,7 @@
 {
+  "dependencies": {
+	  "jquery": "~2.1.1"
+  },
   "devDependencies": {
     "gulp": "^3.8.6",
     "gulp-autoprefixer": "0.0.8",
@@ -7,7 +10,6 @@
     "gulp-minify-css": "^0.3.7",
     "gulp-rename": "^1.2.0",
     "should": "~4.0.4",
-    "jquery": "~2.1.1",
     "jsdom": "~1.0.0-pre.1"
   }
 }
