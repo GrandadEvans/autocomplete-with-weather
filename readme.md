@@ -16,8 +16,12 @@ Much of the script is configurable on instantiation. You can pass an object the 
 You can clone the repository locally with `git clone git@github.com:GrandadEvans/autocomplete-with-weather.git`
 
 ### How to use it
+You can initialise the script with the following code passing the following options into it.
+
+The options are explained further below and this example uses the default values.
+
 		initialiseAutocompleteWithWeather({
-			searchElement: '#city',
+			searchElement: '#weatherSearchInput',
 			minSearchCharacters: 3,
 			displayFormat: '{cityName}, {countryCode} {icon} ({temp})',
 			measurementType: 'metric' // metric or imperial
