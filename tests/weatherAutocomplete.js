@@ -3,7 +3,7 @@ GLOBAL.window =     document.createWindow();
 GLOBAL.$ = GLOBAL.$jQuery = require('jquery').create('window');
 
 var should = require('should');
-require('../src/js/weatherAutocomplete.js');
+require('src/js/autocompleteWithWeather.js');
 
 /**
  * Set the defaults that we will be using

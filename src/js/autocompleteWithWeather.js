@@ -1,4 +1,4 @@
-weatherAutocomplete =  {
+autocompleteWithWeather =  {
 
 	/**
 	 * @todo
@@ -166,7 +166,7 @@ weatherAutocomplete =  {
 		/**
 		 * For every property in the defaults object, see if an override has been passed
 		 */
-		for(var prop in weatherAutocomplete.defaults) {
+		for(var prop in autocompleteWithWeather.defaults) {
 
 			/**
 			 * Has a replacement been provided
@@ -176,7 +176,7 @@ weatherAutocomplete =  {
 				/**
 				 * A replacement has been found so overwrite the default
 				 */
-				weatherAutocomplete.defaults[prop] = overrides[prop];
+				autocompleteWithWeather.defaults[prop] = overrides[prop];
 			}
 		}
 	},
@@ -196,7 +196,7 @@ weatherAutocomplete =  {
 		/**
 		 * When the keyup event has been fired in the search input field then action the input
 		 */
-		$('body').on('keyup', weatherAutocomplete.defaults.searchElement, function(el) {
+		$('body').on('keyup', autocompleteWithWeather.defaults.searchElement, function(el) {
 
 			/**
 			 * Is the key pressed the down arrow?
@@ -206,7 +206,7 @@ weatherAutocomplete =  {
 				/**
 				 * Yes it is; this means that there must be existing results there so move down to the next city
 				 */
-				weatherAutocomplete.focusNextItem(el);
+				autocompleteWithWeather.focusNextItem(el);
 
 				/**
 				 * Go away
@@ -222,7 +222,7 @@ weatherAutocomplete =  {
 				/**
 				 * Yes it is; this means that there must be existing results there so move up to the previous city
 				 */
-				weatherAutocomplete.focusPreviousItem(el);
+				autocompleteWithWeather.focusPreviousItem(el);
 
 				/**
 				 * Go away
@@ -238,7 +238,7 @@ weatherAutocomplete =  {
 				/**
 				 * This it is; this most likely means that the user wants to select the focused city
 				 */
-				weatherAutocomplete.selectItem(el);
+				autocompleteWithWeather.selectItem(el);
 
 				/**
 				 * Go away
@@ -254,12 +254,12 @@ weatherAutocomplete =  {
 			/**
 			 * Set the value in the main scope
 			 */
-			weatherAutocomplete.setSearchTerm(searchTerm);
+			autocompleteWithWeather.setSearchTerm(searchTerm);
 
 			/**
 			 * Now that we have a new input value we need to filter through the results
 			 */
-			weatherAutocomplete.filterResults();
+			autocompleteWithWeather.filterResults();
 
 			/**
 			 * Detect if a user click on a result item/city instead of navigating to it using the keyboard
@@ -269,7 +269,7 @@ weatherAutocomplete =  {
 				/**
 				 * Action the city selected
 				 */
-				weatherAutocomplete.setCity($(this).attr('data-city'));
+				autocompleteWithWeather.setCity($(this).attr('data-city'));
 
 			});
 		})
@@ -352,7 +352,7 @@ weatherAutocomplete =  {
 		/**
 		 * Set the chosen city in the script's scope for everything to access
 		 */
-		weatherAutocomplete.setCity(selected.attr('data-cityName'));
+		autocompleteWithWeather.setCity(selected.attr('data-cityName'));
 
 		/**
 		 * Set the search input elements data-tags with all the available information for the user to do with as
@@ -360,7 +360,7 @@ weatherAutocomplete =  {
 		 *
 		 * @todo convert all underscores to camelCase
 		 */
-		$(weatherAutocomplete.defaults.searchElement)
+		$(autocompleteWithWeather.defaults.searchElement)
 			.attr('data-city_id',          selected.attr('data-city_id'))
 			.attr('data-cityName',         selected.attr('data-cityName'))
 			.attr('data-countryCode',      selected.attr('data-countryCode'))
@@ -429,19 +429,19 @@ weatherAutocomplete =  {
 		 */
 		$.ajax({
 			// Format the URL separately
-			url: weatherAutocomplete.formatSearchURL(),
+			url: autocompleteWithWeather.formatSearchURL(),
 			type: 'POST',
 			success: function(reply) {
 
 				/**
 				 * The AJAX request was successful so extract the information we need
 				 */
-				weatherAutocomplete.setResults(reply.list);
+				autocompleteWithWeather.setResults(reply.list);
 
 				/**
 				 * Now that we have the correct information we need to build the results in the DOM
 				 */
-				weatherAutocomplete.convertResultsIntoListItems();
+				autocompleteWithWeather.convertResultsIntoListItems();
 			},
 			error: function(reply) {
 				/**
@@ -526,7 +526,7 @@ weatherAutocomplete =  {
 			 */
 			ul.append('<li></li>');
 
-			var value = weatherAutocomplete.displayFormat({
+			var value = autocompleteWithWeather.displayFormat({
 				cityName:        city,
 				city_id:         city_id,
 				temperature:            temperature,
@@ -606,7 +606,7 @@ weatherAutocomplete =  {
 		/**
 		 * Append the container to the parent of the search input field
 		 */
-		var parent = $(weatherAutocomplete.defaults.searchElement).parent();
+		var parent = $(autocompleteWithWeather.defaults.searchElement).parent();
 		parent.append('<ul></ul>');
 
 		var ul = parent.find('ul');
@@ -665,7 +665,7 @@ weatherAutocomplete =  {
 		 *
 		 * @todo See if I need an API key to push as it will be used by everybody and can they use it without a key???
 		 */
-		apiKey   = weatherAutocomplete.defaults.apiKey;
+		apiKey   = autocompleteWithWeather.defaults.apiKey;
 
 		/**
 		 * We can now build the URL
@@ -739,7 +739,7 @@ weatherAutocomplete =  {
 		/**
 		 * Cache the required format
 		 */
-		var formatRequired = weatherAutocomplete.defaults.displayFormat;
+		var formatRequired = autocompleteWithWeather.defaults.displayFormat;
 
 		/**
 		 * As long as there is an opening curly brace in the required format keep replacing them
@@ -769,10 +769,10 @@ weatherAutocomplete =  {
 					/**
 					 * Convert the provided temperature to the required measurement then it's ready to be swapped out
 					 */
-					replacement = weatherAutocomplete.formatMeasurement(
+					replacement = autocompleteWithWeather.formatMeasurement(
 						data[dataToReplace].toString(),
-						weatherAutocomplete.measurements[weatherAutocomplete.defaults.measurementType][dataToReplace].abbr,
-						weatherAutocomplete.measurements[weatherAutocomplete.defaults.measurementType][dataToReplace].title
+						autocompleteWithWeather.measurements[autocompleteWithWeather.defaults.measurementType][dataToReplace].abbr,
+						autocompleteWithWeather.measurements[autocompleteWithWeather.defaults.measurementType][dataToReplace].title
 					);
 					break;
 
@@ -847,10 +847,10 @@ weatherAutocomplete =  {
 };
 
 /**
- * Initialise the weatherAutocomplete script with the user's defaults/options
+ * Initialise the autocompleteWithWeather script with the user's defaults/options
  *
  * @param defaultOverrides
  */
 function initialiseAutocompleteWithWeather(defaultOverrides) {
-	weatherAutocomplete.init(defaultOverrides);
+	autocompleteWithWeather.init(defaultOverrides);
 }

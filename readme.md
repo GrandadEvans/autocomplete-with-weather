@@ -1,4 +1,4 @@
-# WeatherAutocomplete
+# autocomplete-with-weather
 
 ## About
 This script provides an autocomplete box underneath an input element. Upon typing name of a city/town etc the results are filtered down in the autocomplete as you would expect.
@@ -10,10 +10,10 @@ Much of the script is configurable on instantiation. You can pass an object the 
 ## Usage
 
 ### Bower
-`bower install --save weatherAutocomplete` will install the package via bower. The main files are provided offering the default js and css files by default although you can always override this in the usual way.
+`bower install --save autocomplete-with-weather` will install the package via bower. The main files are provided offering the default js and css files by default although you can always override this in the usual way.
 
 ### Git
-You can clone the repository locally with `git clone git@github.com:GrandadEvans/weatherAutocomplete.git`
+You can clone the repository locally with `git clone git@github.com:GrandadEvans/autocomplete-with-weather.git`
 
 ### How to use it
 		initialiseAutocompleteWithWeather({
@@ -30,7 +30,7 @@ There are several configuration options (as can be seen above). In details then&
 
 ### Searchelement
 The id of the input to tie the autocomplete to
-(default) '#weatherAutocompleteSearchInput'
+(default) '#autocompleteWithWeatherSearchInput'
 
 ### minSearchChars
 How many characters would you like to have before the initial search is carried out?

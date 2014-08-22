@@ -19,11 +19,11 @@ gulp.task('css', function() {
 });
 
 gulp.task('js', function () {
-	gulp.src('./src/js/weatherAutocomplete.js')
+	gulp.src('./src/js/autocomplete-with-weather.js')
 		.pipe(jsmin())
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('./dist/js'));
-	gulp.src('./src/js/weatherAutocomplete.js')
+	gulp.src('./src/js/autocomplete-with-weather.js')
 		.pipe(gulp.dest('./dist/js'));
 });
 
