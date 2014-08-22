@@ -16,18 +16,13 @@ Much of the script is configurable on instantiation. You can pass an object the 
 You can clone the repository locally with `git clone git@github.com:GrandadEvans/weatherAutocomplete.git`
 
 ### How to use it
-    weatherAutocomplete({
-		searchElement: '#weatherSearchInput',
-		minSearchCharacters: 3,
-		temperatureMeasurement: 'c',
-		displayFormat: '{city}, {countryCode} {icon} ({tempC})',
-		informationToDisplay: [
-			'city',
-			'countryCode',
-			'temperature',
-			'icon'
-		]
-    });
+		initialiseAutocompleteWithWeather({
+			searchElement: '#city',
+			minSearchCharacters: 3,
+			displayFormat: '{cityName}, {countryCode} {icon} ({temp})',
+			measurementType: 'metric' // metric or imperial
+		});
+	});
 
 ## Configuration
 
@@ -38,25 +33,40 @@ The id of the input to tie the autocomplete to
 (default) '#weatherAutocompleteSearchInput'
 
 ### minSearchChars
-How many characters would you like to have before the inital search is carried out?
+How many characters would you like to have before the initial search is carried out?
 (default) 3
 
-### informationToDisplay
-What information would you like to display? You can either enter a string (if you just want the city name) or an array with several fields in. The fields available are:
+### Format to display the information in
+What format does the user want the information to be presented in within the autocomplete results?
 
-  *   The city name `city`
-  *   The temperature `temp`
-  *   The wind speed `windSpeed`, `wind-speed`, `wind_speed`
-  *   The wind direction `windDirection`, `wind-direction`, `wind_direction`
-  *   The percentage of cloud cover `clouds`
-  *   The country name `country`
-  *   The 2 character country code `countryCode`, `country-code`, `country_code`
-  *   The humidity `humidity`
-  *   The barometric pressure `pressure`
-  *   Maximum temperature for the city `maxTemp`, `max-temp`, `max_temp`
-  *   Minimum temperature for the city `minTemp`, `min-temp`, `min_temp`
-  *   An icon showing the weather `icon`
-  *   The co-ordinates as 'data-lat' and 'data-lon' `coords`
+Options:
+
+  *  cityName
+  *  city_id
+  *  temperature
+  *  icon
+  *  windSpeed
+  *  windDirection
+  *  clouds
+  *  countryCode
+  *  humidity
+  *  pressure
+  *  minTemp
+  *  maxTemp
+  *  longitude
+  *  latitude
+  *  shortDescription
+  *  longDescription
+
+All the user has to do is create a string and wrap data they want in curly braces.
+Example: If I wanted the information to be presented as:
+Barnsley, GB {weather icon} (15 deg C)
+Notes: In the example above the icon would be shown and the temperature would include the degree symbol
+followed by correct measurement (C or F)
+The above example would be coded as:
+
+     '{cityName}, {countryCode} {icon} ({temperature})'
+The above is also the default format.
 
 ## Support
 If you require any help then please don't be afraid to ask :-) and thanks for looking.
