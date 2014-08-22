@@ -1,9 +1,11 @@
 {
 	"name": "autocomplete-with-weather",
 	"version": "0.1.0",
-	"authors": [
-		"John Evans <john@grandadevans.com>"
-	],
+	"authors": {
+		"name": "John Evans",
+		"email": "john@grandadevans.com",
+		"homepage": "http://grandadevans.com"
+	},
 	"description": "An autocomplete script that uses openWeatherMap.org API to lookup worldwide cities including weather",
 	"main": [
 		"dist/js/autocomplete-with-weather.js",
@@ -18,7 +20,7 @@
 		"openweathermap"
 	],
 	"license": "MIT",
-	"homepage": "http://grandadevans.com",
+	"homepage": "https://github.com/GrandadEvans/autocomplete-with-weather",
 	"ignore": [
 		"**/.*",
 		"node_modules",
