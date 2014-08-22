@@ -6,6 +6,8 @@
     "gulp-sass": "^0.7.2",
     "gulp-minify-css": "^0.3.7",
     "gulp-rename": "^1.2.0",
-    "should": "~4.0.4"
+    "should": "~4.0.4",
+    "jquery": "~2.1.1",
+    "jsdom": "~1.0.0-pre.1"
   }
 }
