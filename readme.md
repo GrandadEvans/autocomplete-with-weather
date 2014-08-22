@@ -83,3 +83,11 @@ I have a few plans for this library as i use it myself:
   *  Make sure the autocomplete box aligns with the search input box
   *  Monitor the rain input to see what levels the rainfall are over
   
+## Changlog
+
+v0.1.1
+  *  autocompleteWithWeather.js
+  *  Fixed a few typos; layout errors and removed API key from the AJAX call
+  *  Made few changes to the bower.json 
+v.0.1.0
+Initial commit
