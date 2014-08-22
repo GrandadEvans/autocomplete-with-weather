@@ -48,12 +48,12 @@ weatherAutocomplete =  {
 				title: 'degrees'
 			},
 			pressure: {
-				abbr: 'bmars',
-				title: 'millibars'
+				abbr: 'hPa/mbar',
+				title: 'hectopascal/millibar'
 			},
 			rain: {
 				abbr: 'mm',
-				title: 'millimeters'
+				title: 'millimeters per 3 hours'
 			}
 		},
 		imperial: {
@@ -70,16 +70,16 @@ weatherAutocomplete =  {
 				title: 'degrees Celcius'
 			},
 			windSpeed: {
-				abbr: '',
-				title: ''
+				abbr: 'fps',
+				title: 'feet per second'
 			},
 			pressure: {
-				abbr: '',
-				title: ''
+				abbr: 'hPa/mbar',
+				title: 'hectopascal/millibar'
 			},
 			rain: {
-				abbr: '',
-				title: ''
+				abbr: '&ldquo;',
+				title: 'inches per 3 hours'
 			}
 		}
 	},
