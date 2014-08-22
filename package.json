@@ -1,6 +1,6 @@
 {
   "dependencies": {
-	  "jquery": "~2.1.1"
+	  "jquery": "2.*"
   },
   "devDependencies": {
     "gulp": "^3.8.6",
