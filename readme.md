@@ -85,6 +85,8 @@ I have a few plans for this library as i use it myself:
   
 ## Changlog
 
+v0.1.2
+  *  Renamed main files to the hyphenated format
 v0.1.1
   *  autocompleteWithWeather.js
   *  Fixed a few typos; layout errors and removed API key from the AJAX call
