@@ -12,12 +12,18 @@ gulp.task('css', function() {
 		.pipe(autoprefixer('last 5 version'))
 		.pipe(rename({suffix: '.min'}))
 		.pipe(gulp.dest('./dist/css'));
+	gulp.src('./src/scss/*.scss')
+		.pipe(sass())
+		.pipe(autoprefixer('last 5 version'))
+		.pipe(gulp.dest('./dist/css'));
 });
 
 gulp.task('js', function () {
 	gulp.src('./src/js/weatherAutocomplete.js')
 		.pipe(jsmin())
 		.pipe(rename({suffix: '.min'}))
+		.pipe(gulp.dest('./dist/js'));
+	gulp.src('./src/js/weatherAutocomplete.js')
 		.pipe(gulp.dest('./dist/js'));
 });
 

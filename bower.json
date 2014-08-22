@@ -6,8 +6,8 @@
 	],
 	"description": "An autocomplete script that uses openWeatherMap.org API to lookup worldwide cities including weather",
 	"main": [
-		"dist/js/weatherAutocomplete.min.js",
-		"dist/css/sweatherAutocomplete.min.css"
+		"dist/js/weatherAutocomplete.js",
+		"dist/css/sweatherAutocomplete.css"
 	],
 	"moduleType": [
 		"globals"
