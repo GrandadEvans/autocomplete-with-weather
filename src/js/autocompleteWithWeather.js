@@ -2,12 +2,10 @@ autocompleteWithWeather =  {
 
 	/**
 	 * @todo
-	 * Implement the:
-	 *     fields that need data attributes
+	 * fields that need data attributes
 	 * Check on the API key usage
 	 * Create feedback for errors
 	 * Make sure the autocomplete box aligns with the input box
-	 * Sort out the background icons
 	 * stringify the rain
 	 * return an object at the end???
 	 */
@@ -52,7 +50,7 @@ autocompleteWithWeather =  {
 				title: 'hectopascal/millibar'
 			},
 			rain: {
-				abbr: 'mm',
+				abbr: 'mm/3h',
 				title: 'millimeters per 3 hours'
 			}
 		},
@@ -78,7 +76,7 @@ autocompleteWithWeather =  {
 				title: 'hectopascal/millibar'
 			},
 			rain: {
-				abbr: '&ldquo;',
+				abbr: '&ldquo;/3h',
 				title: 'inches per 3 hours'
 			}
 		}
@@ -101,7 +99,7 @@ autocompleteWithWeather =  {
 		minSearchCharacters: 3,
 
 		/**
-		 * The API key for the openweathermap aip. This may change or be deleted depending on how it needs to be used
+		 * The API key for the openweathermap api. This may change or be deleted depending on how it needs to be used
 		 */
 		apiKey: 'e12d6c5a83c260d4fa6a27de5f923145',
 
@@ -116,9 +114,9 @@ autocompleteWithWeather =  {
 		 *
 		 * Imperial:
 		 *      Temperature:    degrees Fahrenheit
-		 *      Wind Speed:     ???
-		 *      Pressure:       ???
-		 *      Rain:           ???
+		 *      Wind Speed:     feet/second
+		 *      Pressure:       millibars
+		 *      Rain:           inches/3h
 		 */
 		measurementType: 'metric',
 
@@ -182,7 +180,7 @@ autocompleteWithWeather =  {
 	},
 
 	/**
-	 * Iinitialise the script and set the defaults
+	 * Initialise the script and set the defaults
 	 *
 	 * @param defaultOverrides
 	 */
@@ -364,7 +362,7 @@ autocompleteWithWeather =  {
 			.attr('data-city_id',          selected.attr('data-city_id'))
 			.attr('data-cityName',         selected.attr('data-cityName'))
 			.attr('data-countryCode',      selected.attr('data-countryCode'))
-			.attr('data-temperature',             selected.attr('data-temperature'))
+			.attr('data-temperature',      selected.attr('data-temperature'))
 			.attr('data-min_temp',         selected.attr('data-min_temp'))
 			.attr('data-max_temp',         selected.attr('data-max_temp'))
 			.attr('data-windSpeed',        selected.attr('data-windSpeed'))
@@ -460,8 +458,6 @@ autocompleteWithWeather =  {
 	 * Extract the required information from the API query results
 	 *
 	 * @param reply
-	 *
-	 * @returns {boolean}
 	 */
 	setResults: function(list) {
 
@@ -506,7 +502,7 @@ autocompleteWithWeather =  {
 			 */
 			var city =             r[i].name;
 			var city_id =          r[i].id;
-			var temperature =             r[i].main.temp;
+			var temperature =      r[i].main.temp;
 			var icon =             r[i].weather[0].icon;
 			var windSpeed =        r[i].wind.speed;
 			var windDirection =    r[i].wind.deg;
@@ -529,7 +525,7 @@ autocompleteWithWeather =  {
 			var value = autocompleteWithWeather.displayFormat({
 				cityName:        city,
 				city_id:         city_id,
-				temperature:            temperature,
+				temperature:     temperature,
 				icon:            icon,
 				windSpeed:       windSpeed,
 				windDirection:   windDirection,
@@ -553,7 +549,7 @@ autocompleteWithWeather =  {
 				.attr('id', 'weatherSearchResultItem_' + r[i].id)
 				.attr('data-cityName',         city)
 				.attr('data-city_id',          city_id)
-				.attr('data-temperature',             temperature)
+				.attr('data-temperature',      temperature)
 				.attr('data-icon',             icon)
 				.attr('data-windSpeed',        windSpeed)
 				.attr('data-windDirection',    windDirection)
@@ -670,7 +666,8 @@ autocompleteWithWeather =  {
 		/**
 		 * We can now build the URL
 		 */
-		var url = baseURL + 'q=' + this.searchTerm + '&mode=' + format + '&units=' + metric + '&type=' + accuracy + '&APPID=' + apiKey;
+	//	var url = baseURL + 'q=' + this.searchTerm + '&mode=' + format + '&units=' + metric + '&type=' + accuracy + '&APPID=' + apiKey;
+		var url = baseURL + 'q=' + this.searchTerm + '&mode=' + format + '&units=' + metric + '&type=' + accuracy;
 
 		/**
 		 * And send it back
@@ -792,8 +789,6 @@ autocompleteWithWeather =  {
 
 					/**
 					 * Add a weather icon span to fit the icon into as the span will have it's background image set
-					 *
-					 * @todo Provide the icon id so that the background-image is already set
 					 */
 					var replacement = '<span class="weatherIcon_' + data.icon + ' weatherIcon">&nbsp;</span>';
 					break;
