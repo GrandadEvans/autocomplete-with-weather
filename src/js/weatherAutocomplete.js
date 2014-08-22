@@ -15,12 +15,74 @@ weatherAutocomplete =  {
 	/**
 	 * Var that will hold the search term
 	 */
-	term: '',
+	searchTerm: '',
 
 	/**
 	 * object that will hold all the results returned for the search term
 	 */
 	existingResults: '',
+
+	/**
+	 * Create an object that will hold all the measurement specifics
+	 */
+	measurements: {
+		metric: {
+			temperature: {
+				abbr: '&#8451;',
+				title: 'degrees Celcius'
+			},
+			minTemp: {
+				abbr: '&#8451;',
+				title: 'degrees Celcius'
+			},
+			maxTemp: {
+				abbr: '&#8451;',
+				title: 'degrees Celcius'
+			},
+			windSpeed: {
+				abbr: 'mps',
+				title: 'meters per second'
+			},
+			windDirection: {
+				abbr: '&deg;',
+				title: 'degrees'
+			},
+			pressure: {
+				abbr: 'bmars',
+				title: 'millibars'
+			},
+			rain: {
+				abbr: 'mm',
+				title: 'millimeters'
+			}
+		},
+		imperial: {
+			temperature: {
+				abbr: '&#8457;',
+				title: 'degrees Fahrenheit'
+			},
+			minTemp: {
+				abbr: '&#8451;',
+				title: 'degrees Celcius'
+			},
+			maxTemp: {
+				abbr: '&#8451;',
+				title: 'degrees Celcius'
+			},
+			windSpeed: {
+				abbr: '',
+				title: ''
+			},
+			pressure: {
+				abbr: '',
+				title: ''
+			},
+			rain: {
+				abbr: '',
+				title: ''
+			}
+		}
+	},
 
 	/**
 	 * Object holding the default options. Each can be overridden by passing the same key through to the init method
@@ -66,7 +128,7 @@ weatherAutocomplete =  {
 		 * Options:
 		 *      cityName
 		 *      city_id
-		 *      temp
+		 *      temperature
 		 *      icon
 		 *      windSpeed
 		 *      windDirection
@@ -88,10 +150,10 @@ weatherAutocomplete =  {
 		 * followed by correct measurement (C or F)
 		 * The above example would be coded as:
 		 *
-		 *      '{cityName}, {countryCode} {icon} ({temp})'
+		 *      '{cityName}, {countryCode} {icon} ({temperature})'
 		 * The above is also the default format.
 		 */
-		displayFormat: '{city}, {countryCode} {icon} ({temp})'
+		displayFormat: '{city}, {countryCode} {icon} ({temperature})'
 	},
 
 	/**
@@ -187,12 +249,12 @@ weatherAutocomplete =  {
 			/**
 			 * Cache the value of the input element
 			 */
-			var term = $(this).val();
+			var searchTerm = $(this).val();
 
 			/**
 			 * Set the value in the main scope
 			 */
-			weatherAutocomplete.setSearchTerm(term);
+			weatherAutocomplete.setSearchTerm(searchTerm);
 
 			/**
 			 * Now that we have a new input value we need to filter through the results
@@ -302,7 +364,7 @@ weatherAutocomplete =  {
 			.attr('data-city_id',          selected.attr('data-city_id'))
 			.attr('data-cityName',         selected.attr('data-cityName'))
 			.attr('data-countryCode',      selected.attr('data-countryCode'))
-			.attr('data-temp',             selected.attr('data-temp'))
+			.attr('data-temperature',             selected.attr('data-temperature'))
 			.attr('data-min_temp',         selected.attr('data-min_temp'))
 			.attr('data-max_temp',         selected.attr('data-max_temp'))
 			.attr('data-windSpeed',        selected.attr('data-windSpeed'))
@@ -354,7 +416,7 @@ weatherAutocomplete =  {
 		/**
 		 * Return the count as an integer
 		 */
-		return this.term.length;
+		return this.searchTerm.length;
 	},
 
 	/**
@@ -444,10 +506,10 @@ weatherAutocomplete =  {
 			 */
 			var city =             r[i].name;
 			var city_id =          r[i].id;
-			var temp =             r[i].main.temp;
+			var temperature =             r[i].main.temp;
 			var icon =             r[i].weather[0].icon;
 			var windSpeed =        r[i].wind.speed;
-			var windDirection =    r[i].wind.dir;
+			var windDirection =    r[i].wind.deg;
 			var clouds =           r[i].clouds.all;
 			var countryCode =      r[i].sys.country;
 			var humidity =         r[i].main.humidity;
@@ -459,11 +521,15 @@ weatherAutocomplete =  {
 			var description =      r[i].weather[0].description;
 			var shortDescription = r[i].weather[0].main;
 
+			/**
+			 * Append a li to the container
+			 */
+			ul.append('<li></li>');
 
-			weatherAutocomplete.displayFormat({
+			var value = weatherAutocomplete.displayFormat({
 				cityName:        city,
 				city_id:         city_id,
-				temp:            temp,
+				temperature:            temperature,
 				icon:            icon,
 				windSpeed:       windSpeed,
 				windDirection:   windDirection,
@@ -476,19 +542,8 @@ weatherAutocomplete =  {
 				latitude:        coordsLat,
 				longitude:       coordsLon,
 				description:     description,
-				sortDescription: shortDescription
-			})
-
-			/**
-			 * Set the rain seperately as it comes in a variety of different measurements depending in the rain level
-			 */
-			var rain = weatherAutocomplete.stringifyRain(r[i].main.rain);
-
-
-			/**
-			 * Append a li to the container
-			 */
-			ul.append('<li></li>');
+				shortDescription: shortDescription
+			});
 
 			/**
 			 * Attach a data attribute for each piece of information
@@ -498,7 +553,7 @@ weatherAutocomplete =  {
 				.attr('id', 'weatherSearchResultItem_' + r[i].id)
 				.attr('data-cityName',         city)
 				.attr('data-city_id',          city_id)
-				.attr('data-temp',             temp)
+				.attr('data-temperature',             temperature)
 				.attr('data-icon',             icon)
 				.attr('data-windSpeed',        windSpeed)
 				.attr('data-windDirection',    windDirection)
@@ -516,7 +571,8 @@ weatherAutocomplete =  {
 			/**
 			 * And set the text of the result item
 			 */
-				.text(weatherAutocomplete.displayFormat);
+				.html(value);
+
 		}
 	},
 
@@ -599,9 +655,9 @@ weatherAutocomplete =  {
 	 */
 	formatSearchURL: function() {
 		var baseURL  = 'http://api.openweathermap.org/data/2.5/find?',
-			format   = 'json', // json or xml
-			metric   = 'metric',// internal, metric or imperial
-			accuracy = 'like'; // like or accurate
+		    format   = 'json', // json or xml
+		    metric   = 'metric',// internal, metric or imperial
+		    accuracy = 'like'; // like or accurate
 
 
 		/**
@@ -614,7 +670,7 @@ weatherAutocomplete =  {
 		/**
 		 * We can now build the URL
 		 */
-		var url = baseURL + 'q=' + this.term + '&mode=' + format + '&units=' + metric + '&type=' + accuracy + '&APPID=' + apiKey;
+		var url = baseURL + 'q=' + this.searchTerm + '&mode=' + format + '&units=' + metric + '&type=' + accuracy + '&APPID=' + apiKey;
 
 		/**
 		 * And send it back
@@ -625,10 +681,10 @@ weatherAutocomplete =  {
 	/**
 	 * Set the search term in the script's scope
 	 *
-	 * @param term
+	 * @param searchTerm
 	 */
-	setSearchTerm: function(term) {
-		this.term = term;
+	setSearchTerm: function(searchTerm) {
+		this.searchTerm = searchTerm;
 	},
 
 	/**
@@ -667,62 +723,6 @@ weatherAutocomplete =  {
 		$('#weatherSearchResults').slideUp();
 	},
 
-	/**
-	 * Convert the temperature from Kelvin to the required scale
-	 *
-	 * @todo Create a policy for the weather. Do I want it in kelvin or what???
-	 *
-	 * @param kelvin
-	 *
-	 * @returns {number}
-	 */
-	convertTemperature: function(kelvin) {
-
-		/**
-		 * If the measurement is 'c' then the conversion is simple...
-		 */
-		if (weatherAutocomplete.defaults.measurementType == 'metric') {
-
-			/**
-			 * ...we just take 272.15 away...
-			 */
-			return parseInt((parseInt(kelvin) - 272.15));
-		} else {
-
-			/**
-			 * ...but 'f' is more complicated
-			 */
-			return parseInt((K - 273.15)* 1.8000 + 32.00);
-		}
-	},
-
-	/**
-	 * Convert the rain level to a uniform format as it comes in various formats depending on the rain level
-	 *
-	 * @todo Create a method for the rain
-	 *
-	 * @param rainObj
-	 *
-	 * @returns {string}
-	 */
-	stringifyRain: function(rainObj) {
-
-		/**
-		 * If there rain is not set there has been no rain provided in the search results
-		 */
-		if (typeof rainObj === "undefined") {
-
-			/**
-			 * In which case we can return empty handed
-			 */
-			return null;
-		}
-
-		/**
-		 * @todo stringify the rain
-		 */
-		return 'rain';
-	},
 
 	/**
 	 * Iterate through the code provided for the weather information display and replace the codes with the actual data
@@ -732,67 +732,53 @@ weatherAutocomplete =  {
 	displayFormat: function(data) {
 
 		/**
+		 * Set the variable that will hold all of the replacement data
+		 */
+		var replacement;
+
+		/**
 		 * Cache the required format
 		 */
-		var formatRequired = this.defaults.displayFormat;
+		var formatRequired = weatherAutocomplete.defaults.displayFormat;
 
 		/**
 		 * As long as there is an opening curly brace in the required format keep replacing them
- 		 */
+		 */
 		while (formatRequired.indexOf('{') >= 0) {
 
 			/**
 			 * Use substring to get the name of the piece of information we want to replace
 			 */
-			var dataToReplace = formatRequired.substring(formatRequired.indexOf('{')+1, (formatRequired.indexOf('}')))
+			var dataToReplace = formatRequired.substring(formatRequired.indexOf('{')+1, (formatRequired.indexOf('}')));
 
 			/**
 			 * Now perform a switch/case on the name of the piece of data
 			 */
 			switch(dataToReplace) {
 
-				case 'temp':
-
-					/**
-					 * Convert the provided temp to the required measurement then it's ready to be swapped out
-					 */
-					replacement = weatherAutocomplete.convertTemperature(data.temp);
-					break;
-
+				case 'temperature':
 				case 'windSpeed':
-
-					/**
-					 * Format the wind speed to the correct measurement type then it's ready to be swapped out
- 					 */
-					replacement = weatherAutocomplete.formatWindSpeed(data.windSpeed);
-					break;
-
 				case 'windDirection':
+				case 'minTemp':
+				case 'maxTemp':
 
 					/**
-					 * Simply replace the keyword with the wind direction followed by the degrees symbol
-					 *
-					 * @todo Maybe offer an option to have it returned in mills
-					 *
-					 * @type {string}
+					 * Convert the provided temperature to the required measurement then it's ready to be swapped out
 					 */
-					replacement = data.windDirection + '&deg;';
-					break
-
-				case 'clouds':
-
-					/**
-					 * Simply return the cloud coverage followed by the percent symbol
-					 */
-					replacement = data.clouds + '&#37;';
-					break
+					replacement = weatherAutocomplete.formatMeasurement(
+						data[dataToReplace].toString(),
+						weatherAutocomplete.measurements[weatherAutocomplete.defaults.measurementType][dataToReplace].abbr,
+						weatherAutocomplete.measurements[weatherAutocomplete.defaults.measurementType][dataToReplace].title
+					);
+					break;
 
 				case 'humidity':
+				case'clouds':
 
 					/**
 					 * Simply return the humidty level followed by the percent symbol
 					 */
-					replacement = data.humidity + '&#37;';
+					replacement = data[dataToReplace] + '&#37;';
 					break;
 
 				case 'pressure':
@@ -805,20 +791,6 @@ weatherAutocomplete =  {
 					replacement = data.pressure + 'mbar';
 					break;
 
-				case 'minTemp':
-
-					/**
-					 * Return the minimum temperature for the city once it's been correctly formatted
-					 */
-					replacement = weatherAutocomplete.convertTemperature(data.minTemp);
-
-				case 'maxTemp':
-
-					/**
-					 * Return the maximum temperature for the city once it's been correctly formatted
-					 */
-					replacement = weatherAutocomplete.convertTemperature(data.maxTemp);
-
 				case 'icon':
 
 					/**
@@ -826,12 +798,8 @@ weatherAutocomplete =  {
 					 *
 					 * @todo Provide the icon id so that the background-image is already set
 					 */
-					var replacement = '<span class="weatherIcon_' + data.id + ' weatherIcon">&nbsp;</span>';
-
-					/**
-					 * Set the background image to be the icon
-					 */
-					weatherAutocomplete.setBackgroundIcon(data.id, data.icon);
+					var replacement = '<span class="weatherIcon_' + data.icon + ' weatherIcon">&nbsp;</span>';
+					break;
 
 				case 'latitude':
 				case 'longitude':
@@ -853,6 +821,7 @@ weatherAutocomplete =  {
 					 */
 					replacement = data[dataToReplace];
 			}
+			console.log('replacement has returned: ' + replacement);
 
 			/**
 			 * Create a new regular expression object with the code for the item eg {cityName}
@@ -863,25 +832,21 @@ weatherAutocomplete =  {
 			 * Perform the replacement.ie replace {cityName} with Barnsley (from the example near the top of the script)
 			 * @type {string}
 			 */
-			formatRequired = formatRequired.replace(re, data[dataToReplace]);
+			formatRequired = formatRequired.replace(re, replacement);
 		}
 
 		/**
 		 * Now that all the codes have been replaced we need to set the correctly formatted string back in the main
 		 * object's scope
 		 */
-		weatherAutocomplete.defaults.displayFormat = formatRequired;
+		return formatRequired;
 	},
 
 	/**
-	 * Format the wind speed depending on what measurement type has been chosen
+	 * Format the measurements according to whether the user wants metric aor imperial
 	 */
-	formatWindSpeed: function() {
-
-		/**
-		 * Return a correctly formatted string
-		 */
-		return windSpeed + weatherAutocomplete[weatherAutocomplete.defaults.measurementType].windSpeed;
+	formatMeasurement: function(value, abbr, title) {
+		return value.toString() + ' <abbr title="' + title + '">' + abbr + '</abbr>';
 	}
 };
 
