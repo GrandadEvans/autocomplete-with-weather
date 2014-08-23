@@ -79,6 +79,7 @@ If you require any help then please don't be afraid to ask :-) and thanks for lo
 I have a few plans for this library as i use it myself:
 
   *  Create tests
+  *  Search results: take abbreviations away from temperatures and add them to the countryCodes instead
   *  Create an auto notification if an error exists
   *  Make sure the autocomplete box aligns with the search input box
   *  Monitor the rain input to see what levels the rainfall are over
