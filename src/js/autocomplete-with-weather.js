@@ -211,7 +211,7 @@ autocompleteWithWeather =  {
 				/**
 				 * Yes it is; this means that there must be existing results there so move down to the next city
 				 */
-				autocompleteWithWeather.focusNextItem(el);
+				autocompleteWithWeather.focusNextItem();
 
 				/**
 				 * Go away
@@ -227,7 +227,7 @@ autocompleteWithWeather =  {
 				/**
 				 * Yes it is; this means that there must be existing results there so move up to the previous city
 				 */
-				autocompleteWithWeather.focusPreviousItem(el);
+				autocompleteWithWeather.focusPreviousItem();
 
 				/**
 				 * Go away
@@ -243,7 +243,7 @@ autocompleteWithWeather =  {
 				/**
 				 * This it is; this most likely means that the user wants to select the focused city
 				 */
-				autocompleteWithWeather.selectItem(el);
+				autocompleteWithWeather.selectItem();
 
 				/**
 				 * Go away
@@ -282,15 +282,18 @@ autocompleteWithWeather =  {
 
 	/**
 	 * Sent the focus to the next search result
-	 *
-	 * @param el
 	 */
-	focusNextItem: function(el) {
+	focusNextItem: function() {
+
+		/**
+		 * Cache the focused elements as they are used more than once
+		 */
+		var focused = $('li.focus');
 
 		/**
 		 * Are there any results currently "focused"
 		 */
-		if ($('li.focus').length == 0) {
+		if (focused.length === 0) {
 
 			/**
 			 * No there aren't so set the focus to the first result
@@ -302,36 +305,40 @@ autocompleteWithWeather =  {
 			/**
 			 * There is an existing result item in focus so set the next one to be focused
 			 */
-			this.focusItem($('li.focus').next());
+			this.focusItem(focused.next());
 
 			/**
 			 * Unfocus the first element that has focus (at this point there is two)
 			 */
-			this.unfocusItem($('li.focus').first());
+			this.unfocusItem(focused.first());
 		}
 	},
 
 	/**
 	 * Move the focus to the previous result
-	 *
-	 * @param el
 	 */
-	focusPreviousItem: function(el) {
+	focusPreviousItem: function() {
+
+		/**
+		 * Cache the focused elements as they are used more than once
+		 */
+		var focused = $('li.focus');
+
 
 		/**
 		 * Are there ant existing focused results?
 		 */
-		if ($('li.focus').length > 0) {
+		if (focused.length > 0) {
 
 			/**
 			 * Yes there are so focus on the previous one
 			 */
-			this.focusItem($('li.focus').prev());
+			this.focusItem(focused.prev());
 
 			/**
 			 * Unfocus the last focused element (in the DOM, not time wise) (at this stage there are two)
 			 */
-			this.unfocusItem($('li.focus').last());
+			this.unfocusItem(focused.last());
 		} else {
 
 			/**
@@ -344,10 +351,8 @@ autocompleteWithWeather =  {
 
 	/**
 	 * A search result item has been selected to accept it
-	 *
-	 * @param el
 	 */
-	selectItem: function(el) {
+	selectItem: function() {
 
 		/**
 		 * Cache the selected result as we are going to need it in several places
@@ -412,7 +417,7 @@ autocompleteWithWeather =  {
 	},
 
 	/**
-	 * Coune the characters in the search input's value
+	 * Count the characters in the search input's value
 	 *
 	 * @returns {Number}
 	 */
@@ -434,6 +439,7 @@ autocompleteWithWeather =  {
 		 */
 		$.ajax({
 			// Format the URL separately
+			context: this,
 			url: autocompleteWithWeather.formatSearchURL(),
 			type: 'POST',
 			success: function(reply) {
@@ -464,7 +470,7 @@ autocompleteWithWeather =  {
 	/**
 	 * Extract the required information from the API query results
 	 *
-	 * @param reply
+	 * @param list
 	 */
 	setResults: function(list) {
 
@@ -480,6 +486,10 @@ autocompleteWithWeather =  {
 	convertResultsIntoListItems: function() {
 
 		/**
+		 * Cache the weather search results
+		 */
+		var results = $('#weatherSearchResults');
+		/**
 		 * Build the results container
 		 */
 		var ul = this.buildResultsContainer();
@@ -487,12 +497,12 @@ autocompleteWithWeather =  {
 		/**
 		 * If the results element is not visible...
 		 */
-		if ($('#weatherSearchResults').css('display') == 'none') {
+		if (results.css('display') == 'none') {
 
 			/**
 			 * ...Slide it down
 			 */
-			$('#weatherSearchResults').slideDown();
+			results.slideDown();
 		}
 
 		/**
@@ -585,9 +595,13 @@ autocompleteWithWeather =  {
 	buildResultsContainer: function() {
 
 		/**
+		 * Cache the results selector
+		 */
+		var resultsSelector = $('#weathSearchResults');
+		/**
 		 * If an existing container exists...
 		 */
-		if ($('#weatherSearchResults').length == 1) {
+		if (resultsSelector.length == 1) {
 
 			/**
 			 * ...for each results item in there...
@@ -603,7 +617,7 @@ autocompleteWithWeather =  {
 			/**
 			 * Return the newly emptied container
 			 */
-			return $('#weatherSearchResults');
+			return resultsSelector;
 		}
 
 		/**
@@ -628,7 +642,7 @@ autocompleteWithWeather =  {
 		/**
 		 * Return the container itself
 		 */
-		return $('#weatherSearchResults');
+		return resultsSelector;
 	},
 
 	/**
@@ -660,7 +674,7 @@ autocompleteWithWeather =  {
 		var baseURL  = 'http://api.openweathermap.org/data/2.5/find?',
 		    format   = 'json', // json or xml
 		    metric   = 'metric',// internal, metric or imperial
-		    accuracy = 'like'; // like or accurate
+		    accuracy = 'like';// like or accurate
 
 
 		/**
@@ -668,7 +682,7 @@ autocompleteWithWeather =  {
 		 *
 		 * @todo See if I need an API key to push as it will be used by everybody and can they use it without a key???
 		 */
-		apiKey   = autocompleteWithWeather.defaults.apiKey;
+		var apiKey   = autocompleteWithWeather.defaults.apiKey;
 
 		/**
 		 * We can now build the URL
@@ -797,7 +811,7 @@ autocompleteWithWeather =  {
 					/**
 					 * Add a weather icon span to fit the icon into as the span will have it's background image set
 					 */
-					var replacement = '<span class="weatherIcon_' + data.icon + ' weatherIcon">&nbsp;</span>';
+					replacement = '<span class="weatherIcon_' + data.icon + ' weatherIcon">&nbsp;</span>';
 					break;
 
 			/**
