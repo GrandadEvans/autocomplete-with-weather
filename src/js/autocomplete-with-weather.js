@@ -162,6 +162,13 @@ autocompleteWithWeather =  {
 	overrideDefaults: function(overrides) {
 
 		/**
+		 * If the user is sticking to the defaults then return
+		 */
+		if (typeof overrides === "undefined") {
+			return;
+		}
+
+		/**
 		 * For every property in the defaults object, see if an override has been passed
 		 */
 		for(var prop in autocompleteWithWeather.defaults) {
