@@ -377,12 +377,12 @@ autocompleteWithWeather =  {
 			 */
 			$('body').on('click', '.weatherSearchResultItem', function() {
 
-				/**
-				 * Action the city selected
-				 */
-				autocompleteWithWeather.setCity($(this).attr('data-city'));
 
-			});
+                /**
+                 * Action the city selected
+                 */
+                autocompleteWithWeather.setCity($(this).attr('data-city'));
+            });
 		}
 	},
 
@@ -494,6 +494,7 @@ autocompleteWithWeather =  {
 			.attr('data-description',      selected.attr('data-description'))
 			.attr('data-shortDescription', selected.attr('data-shortDescription'))
 			.attr('data-icon',             selected.attr('data-icon'))
+            .attr('data-measurementType', weatherAutocomplete.defaults.measurementType)
 	},
 
 	/**
