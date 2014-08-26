@@ -1,38 +1,42 @@
 {
-	"name": "autocomplete-with-weather",
-	"version": "0.1.1",
-	"authors": {
-		"name": "John Evans",
-		"email": "john@grandadevans.com",
-		"homepage": "http://grandadevans.com"
-	},
-	"description": "An autocomplete script that uses openWeatherMap.org API to lookup worldwide cities including weather",
-	"main": [
-		"dist/js/autocomplete-with-weather.js",
-		"dist/css/autocomplete-with-weather.css"
-	],
-	"moduleType": [
-		"globals"
-	],
-	"keywords": [
-		"autocomplete",
-		"weather",
-		"openweathermap"
-	],
-	"license": "MIT",
-	"homepage": "https://github.com/GrandadEvans/autocomplete-with-weather",
-	"ignore": [
-		"**/.*",
-		"node_modules",
-		"bower_components",
-		"test",
-		"tests"
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/GrandadEvans/autocomplete-with-weather"
-	},
-	"dependencies": {
-		"jquery": "2.*"
-	}
+  "name": "autocomplete-with-weather",
+  "version": "0.1.1",
+  "authors": {
+    "name": "John Evans",
+    "email": "john@grandadevans.com",
+    "homepage": "http://grandadevans.com"
+  },
+  "description": "An autocomplete script that uses openWeatherMap.org API to lookup worldwide cities including weather",
+  "main": [
+    "dist/js/autocomplete-with-weather.js",
+    "dist/css/autocomplete-with-weather.css"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "autocomplete",
+    "weather",
+    "openweathermap"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/GrandadEvans/autocomplete-with-weather",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GrandadEvans/autocomplete-with-weather"
+  },
+  "dependencies": {
+    "jquery": "2.*"
+  },
+  "devDependencies": {
+    "jasmine": "~2.0.3",
+    "jasmine-jquery": "~2.0.5"
+  }
 }

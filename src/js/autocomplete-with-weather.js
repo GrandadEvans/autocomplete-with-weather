@@ -151,7 +151,89 @@ autocompleteWithWeather =  {
 		 *      '{cityName}, {countryCode} {icon} ({temperature})'
 		 * The above is also the default format.
 		 */
-		displayFormat: '{city}, {countryCode} {icon} ({temperature})'
+        displayFormat: '{city}, {countryCode} {icon} ({temperature})',
+
+        /**
+         * Set an initial search term of a blank string
+         */
+              searchTerm: ''
+	},
+
+	/**
+	 * Object holding the default options. Each can be overridden by passing the same key through to the init method
+	 */
+	copyOfDefaults: {
+
+		/**
+		 * The selector for the search input field. This will be used to grab the search term for and to bind the
+		 * resulting results box to
+		 */
+		searchElement: '#weatherSearchInput',
+
+		/**
+		 * How many characters should the user have to enter before the initial query is made to the OpenWeatherMap API?
+		 */
+		minSearchCharacters: 3,
+
+		/**
+		 * The API key for the openweathermap api. This may change or be deleted depending on how it needs to be used
+		 */
+		apiKey: 'e12d6c5a83c260d4fa6a27de5f923145',
+
+		/**
+		 * Does the user want their results in "metric" or "imperial"
+		 *
+		 * Metric:
+		 *      Temperature:    degrees Celcius
+		 *      Wind Speed:     meters/seconds
+		 *      Pressure:       millibars
+		 *      Rain:           millimeters
+		 *
+		 * Imperial:
+		 *      Temperature:    degrees Fahrenheit
+		 *      Wind Speed:     feet/second
+		 *      Pressure:       millibars
+		 *      Rain:           inches/3h
+		 */
+		measurementType: 'metric',
+
+		/**
+		 * What format does the user want the information to be presented in within the autocomplete results?
+		 *
+		 * Options:
+		 *      cityName
+		 *      city_id
+		 *      temperature
+		 *      icon
+		 *      windSpeed
+		 *      windDirection
+		 *      clouds
+		 *      countryCode
+		 *      humidity
+		 *      pressure
+		 *      minTemp
+		 *      maxTemp
+		 *      longitude
+		 *      latitude
+		 *      shortDescription
+		 *      longDescription
+		 *
+		 * All the user has to do is create a string and wrap data they want in curly braces.
+		 * Example: If I wanted the information to be presented as:
+		 * Barnsley, GB {weather icon} (15 deg C)
+		 * Notes: In the example above the icon would be shown and the temperature would include the degree symbol
+		 * followed by correct measurement (C or F)
+		 * The above example would be coded as:
+		 *
+		 *      '{cityName}, {countryCode} {icon} ({temperature})'
+		 * The above is also the default format.
+		 */
+        displayFormat: '{city}, {countryCode} {icon} ({temperature})',
+
+        /**
+         * Set an initial search term of a blank string
+         */
+              searchTerm: ''
 	},
 
 	/**
@@ -200,13 +282,32 @@ autocompleteWithWeather =  {
 
 		/**
 		 * When the keyup event has been fired in the search input field then action the input
+         *
+         * I am getting the value via normal JS instead of jQuery as I couldn't get the tests sto work with the ajax
+         * key triggers which made me think that maybe there are some situations where they would also fail in real
+         * life.
 		 */
-		$('body').on('keyup', autocompleteWithWeather.defaults.searchElement, function(el) {
+		document.getElementById(autocompleteWithWeather.defaults.searchElement.replace('#', '')).onkeyup = function(event) {
 
-			/**
+            /**
+             * distinguish between IE's explicit event object (window.event) and everybody else's implicit.
+             */
+            var evtobj=window.event? event : e;
+
+            /**
+             * Get the unicode value of the key
+             */
+            var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
+
+            /**
+             * Get the actual key that was pressed
+             */
+            var actualkey=String.fromCharCode(unicode).toLowerCase();
+
+            /**
 			 * Is the key pressed the down arrow?
 			 */
-			if (el.keyCode == 40) {
+			if (event.keyCode == 40) {
 
 				/**
 				 * Yes it is; this means that there must be existing results there so move down to the next city
@@ -222,7 +323,7 @@ autocompleteWithWeather =  {
 			/**
 			 * Is the key pressed the up arrow?
 			 */
-			if (el.keyCode == 38) {
+			if (event.keyCode == 38) {
 
 				/**
 				 * Yes it is; this means that there must be existing results there so move up to the previous city
@@ -238,7 +339,7 @@ autocompleteWithWeather =  {
 			/**
 			 * Is the key pressed the Enter key?
 			 */
-			if (el.keyCode == 13) {
+			if (event.keyCode == 13) {
 
 				/**
 				 * This it is; this most likely means that the user wants to select the focused city
@@ -254,7 +355,12 @@ autocompleteWithWeather =  {
 			/**
 			 * Cache the value of the input element
 			 */
-			var searchTerm = $(this).val();
+			autocompleteWithWeather.searchTerm = document.getElementById(autocompleteWithWeather.defaults.searchElement.replace('#', '')).value;
+
+            /**
+             * Concatonate the old and new inputs
+             */
+            searchTerm = autocompleteWithWeather.searchTerm + actualkey;
 
 			/**
 			 * Set the value in the main scope
@@ -277,7 +383,7 @@ autocompleteWithWeather =  {
 				autocompleteWithWeather.setCity($(this).attr('data-city'));
 
 			});
-		})
+		}
 	},
 
 	/**
@@ -443,7 +549,7 @@ autocompleteWithWeather =  {
 			url: autocompleteWithWeather.formatSearchURL(),
 			type: 'POST',
 			success: function(reply) {
-
+console.log('success has been triggered');
 				/**
 				 * The AJAX request was successful so extract the information we need
 				 */
@@ -462,7 +568,10 @@ autocompleteWithWeather =  {
 				 */
 				console.warn("There was an error");
 				console.dir(reply);
-			}
+			},
+            done: function() {
+                console.log('ajax call has finished');
+            }
 		});
 
 	},
@@ -702,8 +811,8 @@ autocompleteWithWeather =  {
 	 * @param searchTerm
 	 */
 	setSearchTerm: function(searchTerm) {
-		this.searchTerm = searchTerm;
-	},
+		autocompleteWithWeather.searchTerm = searchTerm;
+ 	},
 
 	/**
 	 * Set the city in the script's scope
@@ -859,7 +968,15 @@ autocompleteWithWeather =  {
 	 */
 	formatMeasurement: function(value, abbr, title) {
 		return value.toString() + ' <abbr title="' + title + '">' + abbr + '</abbr>';
-	}
+	},
+
+    /**
+     * Reset the defaults back to the originals
+     */
+    resetOptions: function() {
+        autocompleteWithWeather.defaults = jQuery.extend(true, {}, autocompleteWithWeather.copyOfDefaults);
+//        autocompleteWithWeather.defaults = clone autocompleteWithWeather.copyOfDefaults;
+    }
 };
 
 /**
@@ -867,6 +984,6 @@ autocompleteWithWeather =  {
  *
  * @param defaultOverrides
  */
-function initialiseAutocompleteWithWeather(defaultOverrides) {
-	autocompleteWithWeather.init(defaultOverrides);
+function initialiseAutocompleteWithWeather(defaultOverrides, $) {
+	autocompleteWithWeather.init(defaultOverrides, $);
 }
