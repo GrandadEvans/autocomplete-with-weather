@@ -86,6 +86,9 @@ I have a few plans for this library as i use it myself:
   
 ## Changlog
 
+v0.1.5
+  *  Commented out code that was duplicating the appending of the last key pressed onto the search results
+  
 v0.1.4
   *  Fixed two typos causing problems
    
