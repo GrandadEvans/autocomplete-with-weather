@@ -354,11 +354,14 @@ autocompleteWithWeather =  {
 
 			/**
 			 * Cache the value of the input element
+             *
+             * Commented this line out: it must have been there for some reason (probably testing) but
+             * now it is just duplicating the lines following it
 			 */
-			autocompleteWithWeather.searchTerm = document.getElementById(autocompleteWithWeather.defaults.searchElement.replace('#', '')).value;
+//			autocompleteWithWeather.searchTerm = document.getElementById(autocompleteWithWeather.defaults.searchElement.replace('#', '')).value;
 
             /**
-             * Concatonate the old and new inputs
+             * Concatenate the old and new inputs
              */
             searchTerm = autocompleteWithWeather.searchTerm + actualkey;
 
