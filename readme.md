@@ -86,14 +86,20 @@ I have a few plans for this library as i use it myself:
   
 ## Changlog
 
+v0.1.4
+  *  Fixed two typos causing problems
+   
 v0.1.3
   *  Added more cached elements
   *  Updated the distribution files
+
 v0.1.2
   *  Renamed main files to the hyphenated format
+
 v0.1.1
   *  autocompleteWithWeather.js
   *  Fixed a few typos; layout errors and removed API key from the AJAX call
   *  Made few changes to the bower.json 
+
 v.0.1.0
-Initial commit
+  *  Initial commit
