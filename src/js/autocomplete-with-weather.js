@@ -377,11 +377,15 @@ autocompleteWithWeather =  {
 			 */
 			$('body').on('click', '.weatherSearchResultItem', function() {
 
+                /**
+                 * Add focus to the item so that we know which city has been chosen
+                 */
+                $(this).addClass('focus');
 
                 /**
                  * Action the city selected
                  */
-                autocompleteWithWeather.setCity($(this).attr('data-city'));
+                autocompleteWithWeather.selectItem();
             });
 		}
 	},
@@ -494,7 +498,7 @@ autocompleteWithWeather =  {
 			.attr('data-description',      selected.attr('data-description'))
 			.attr('data-shortDescription', selected.attr('data-shortDescription'))
 			.attr('data-icon',             selected.attr('data-icon'))
-            .attr('data-measurementType', weatherAutocomplete.defaults.measurementType)
+            .attr('data-measurementType', autocompleteWithWeather.defaults.measurementType)
 	},
 
 	/**
@@ -707,7 +711,7 @@ console.log('success has been triggered');
 		/**
 		 * Cache the results selector
 		 */
-		var resultsSelector = $('#weathSearchResults');
+		var resultsSelector = $('#weatherSearchResults');
 		/**
 		 * If an existing container exists...
 		 */
